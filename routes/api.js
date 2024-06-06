@@ -1,6 +1,8 @@
 const express = require('express');
 const Latency = require('../models/Latency');
 const router = express.Router();
+const cronHandler = require('../cron'); // Importing cron handler from one folder above
+
 
 // GET handler to fetch recent latencies for OpenAI (for debugging or display)
 router.get('/openai-latency', async (req, res) => {
@@ -31,5 +33,9 @@ router.get('/historical-latencies', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+router.get('/cron', cronHandler);
+
+
 
 module.exports = router;
