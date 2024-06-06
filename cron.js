@@ -1,6 +1,6 @@
-import { recordLatency } from '../../latencyService';
+const { recordLatency } = require('./latencyService');
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   // Check if the request is authorized
   if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).end('Unauthorized');
@@ -32,3 +32,5 @@ export default async function handler(req, res) {
     res.status(500).end('Error executing cron job');
   }
 }
+
+module.exports = handler;

@@ -2,9 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const cron = require('node-cron');
 const apiRoutes = require('./routes/api');
-const { recordLatency } = require('./latencyService');
+const handler = require('./cron');
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -19,31 +19,9 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', apiRoutes);
 
+app.use('/api/cron', handler);
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
-
-// Schedule tasks to be run on the server every 5 minutes
-cron.schedule('*/10 * * * *', async () => {
-  console.log('Running a task every ten minutes');
-  const currentTime = new Date();
-  const roundedTime = new Date(Math.floor(currentTime.getTime() / 600000) * 600000);
-  try {
-    // OpenAI models
-    await recordLatency('openai', 'gpt-3.5-turbo', roundedTime);
-    await recordLatency('openai', 'gpt-4', roundedTime);
-    await recordLatency('openai', 'gpt-4-turbo', roundedTime);
-    await recordLatency('openai', 'gpt-4o', roundedTime);
-
-    // Anthropic models
-    await recordLatency('anthropic', 'claude-3-opus-20240229', roundedTime);
-    await recordLatency('anthropic', 'claude-3-sonnet-20240229', roundedTime);
-    await recordLatency('anthropic', 'claude-3-haiku-20240307', roundedTime);
-
-    await recordLatency('google', 'gemini-1.5-pro', roundedTime);
-    await recordLatency('google', 'gemini-1.5-flash', roundedTime);
-    await recordLatency('google', 'gemini-1.0-pro', roundedTime);
-  } catch (err) {
-    console.error('Error recording latency directly:', err);
-  }
 });
