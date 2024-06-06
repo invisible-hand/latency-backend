@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', apiRoutes);
 
-app.use('/api/cron', handler);
+// app.use('/api/cron', handler);
 
 
 app.listen(PORT, () => {

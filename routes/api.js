@@ -34,7 +34,13 @@ router.get('/historical-latencies', async (req, res) => {
   }
 });
 
-router.get('/cron', cronHandler);
+router.post('/cron', async (req, res) => {
+  try {
+    await cronHandler(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 
