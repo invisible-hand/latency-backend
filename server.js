@@ -24,10 +24,10 @@ app.listen(PORT, () => {
 });
 
 // Schedule tasks to be run on the server every 5 minutes
-cron.schedule('*/5 * * * *', async () => {
-  console.log('Running a task every five minutes');
+cron.schedule('*/10 * * * *', async () => {
+  console.log('Running a task every ten minutes');
   const currentTime = new Date();
-  const roundedTime = new Date(Math.floor(currentTime.getTime() / 300000) * 300000);
+  const roundedTime = new Date(Math.floor(currentTime.getTime() / 600000) * 600000);
   try {
     // OpenAI models
     await recordLatency('openai', 'gpt-3.5-turbo', roundedTime);
