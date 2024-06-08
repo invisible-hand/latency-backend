@@ -26,6 +26,10 @@ async function handler(req, res) {
     await recordLatency('google', 'gemini-1.5-flash', roundedTime);
     await recordLatency('google', 'gemini-1.0-pro', roundedTime);
 
+    await recordLatency('groq', 'llama3-8b-8192', roundedTime);
+    await recordLatency('groq', 'llama3-70b-8192', roundedTime);
+    await recordLatency('groq', 'mixtral-8x7b-32768', roundedTime);
+
     res.status(200).end('Cron job executed successfully');
   } catch (error) {
     console.error('Error executing cron job:', error);

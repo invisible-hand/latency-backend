@@ -2,6 +2,8 @@
 const axios = require('axios');
 const Latency = require('./models/Latency');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const Groq = require("groq-sdk").default;
+
 
 async function recordLatency(provider, model, timestamp) {
   try {
@@ -16,7 +18,7 @@ async function recordLatency(provider, model, timestamp) {
       const response = await axios.post('https://api.openai.com/v1/chat/completions', {
         model: model,
         messages: [{ role: 'user', content: 'Tell me a joke' }],
-        max_tokens: 30,
+        max_tokens: 50,
         temperature: 0.7
       }, {
         headers: {
@@ -33,7 +35,7 @@ async function recordLatency(provider, model, timestamp) {
       const response = await axios.post('https://api.anthropic.com/v1/messages', {
         messages: [{ role: 'user', content: 'Tell me a joke' }],
         model: model,
-        max_tokens: 30,
+        max_tokens: 100,
         temperature: 0.7
       }, {
         headers: {
@@ -54,6 +56,21 @@ async function recordLatency(provider, model, timestamp) {
       const result = await geminiModel.generateContent('Tell me a joke');
       const response = await result.response;
       await response.text();
+      latency = Date.now() - startTime;
+    }
+
+    else if (provider === 'groq') {
+      const groqModels = ['llama3-8b-8192', 'llama3-70b-8192', 'mixtral-8x7b-32768'];
+      if (!groqModels.includes(model)) {
+        throw new Error(`Invalid Groq model: ${model}`);
+      }
+      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+      const startTime = Date.now();
+      const response = await groq.chat.completions.create({
+        messages: [{ role: 'user', content: 'Tell me a joke' }],
+        model: model,
+        max_tokens: 100,
+      });
       latency = Date.now() - startTime;
     }
 
