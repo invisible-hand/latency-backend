@@ -30,7 +30,9 @@ async function recordLatency(provider, model, timestamp) {
         });
         return Date.now() - startTime;
       } else if (provider === 'anthropic') {
-        const anthropicModels = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307'];
+        const anthropicModels = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307', 'claude-3-5-sonnet-20240620'];
+
+
         if (!anthropicModels.includes(model)) {
           throw new Error(`Invalid Anthropic model: ${model}`);
         }

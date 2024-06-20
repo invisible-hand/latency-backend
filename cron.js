@@ -20,6 +20,8 @@ async function handler(req, res) {
     await recordLatency('anthropic', 'claude-3-opus-20240229', roundedTime);
     await recordLatency('anthropic', 'claude-3-sonnet-20240229', roundedTime);
     await recordLatency('anthropic', 'claude-3-haiku-20240307', roundedTime);
+    await recordLatency('anthropic', 'claude-3-5-sonnet-20240620', roundedTime); // New line
+
 
     // Google Gemini models
     await recordLatency('google', 'gemini-1.5-pro', roundedTime);
