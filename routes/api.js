@@ -27,7 +27,10 @@ router.get('/anthropic-latency', async (req, res) => {
 // Handler to fetch all historical latencies
 router.get('/historical-latencies', async (req, res) => {
   try {
-    const latencies = await Latency.find().sort({ createdAt: 1 });
+    const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+    const latencies = await Latency.find({
+      createdAt: { $gte: threeDaysAgo }
+    }).sort({ createdAt: 1 });
     res.json(latencies);
   } catch (error) {
     res.status(500).send('Server Error');
