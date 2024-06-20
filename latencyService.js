@@ -50,7 +50,11 @@ async function recordLatency(provider, model, timestamp) {
             'anthropic-version': '2023-06-01'
           }
         });
-        return Date.now() - startTime;
+        const endTime = Date.now();
+        console.log(`Received response for Anthropic model ${model}. Status: ${response.status}`); // Add this log
+        console.log(`Response data for ${model}:`, JSON.stringify(response.data, null, 2)); // Add this log (be careful with sensitive data)
+        return endTime - startTime;
+        
       } else if (provider === 'google') {
         const geminiModels = ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-1.0-pro'];
         if (!geminiModels.includes(model)) {
@@ -101,6 +105,10 @@ async function recordLatency(provider, model, timestamp) {
     console.log(`${provider} - ${model} latency recorded: ${latency} ms`);
   } catch (error) {
     console.error(`Error recording ${provider} - ${model} latency:`, error);
+    if (error.response) {
+      console.error(`Response status: ${error.response.status}`);
+      console.error(`Response data:`, error.response.data);
+    }
   }
 }
 
