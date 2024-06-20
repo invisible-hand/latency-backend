@@ -26,6 +26,10 @@ async function recordLatency(provider, model, timestamp) {
         }
       });
       latency = Date.now() - startTime;
+      if (latency > 10000) {
+        console.log(`${provider} - ${model} latency exceeded 10 seconds. Skipping measurement.`);
+        return;
+      }
     } else if (provider === 'anthropic') {
       const anthropicModels = ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307'];
       if (!anthropicModels.includes(model)) {
@@ -45,6 +49,10 @@ async function recordLatency(provider, model, timestamp) {
         }
       });
       latency = Date.now() - startTime;
+      if (latency > 10000) {
+        console.log(`${provider} - ${model} latency exceeded 10 seconds. Skipping measurement.`);
+        return;
+      }
     } else if (provider === 'google') {
       const geminiModels = ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-1.0-pro'];
       if (!geminiModels.includes(model)) {
@@ -57,6 +65,10 @@ async function recordLatency(provider, model, timestamp) {
       const response = await result.response;
       await response.text();
       latency = Date.now() - startTime;
+      if (latency > 10000) {
+        console.log(`${provider} - ${model} latency exceeded 10 seconds. Skipping measurement.`);
+        return;
+      }
     }
 
     else if (provider === 'groq') {
@@ -72,6 +84,10 @@ async function recordLatency(provider, model, timestamp) {
         max_tokens: 100,
       });
       latency = Date.now() - startTime;
+      if (latency > 3000) {
+        console.log(`${provider} - ${model} latency exceeded 3 seconds. Skipping measurement.`);
+        return;
+      }
     }
 
     const newLatency = new Latency({
